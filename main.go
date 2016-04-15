@@ -55,12 +55,12 @@ func Index(w http.ResponseWriter, r *http.Request) {
 			dataFilters = append(dataFilters, *dataFilter)
 		}
 	}
-	fmt.Printf("first:%s\n", dataFilters[0].DisplayNames[0].Value)
-	fmt.Printf("last:%s\n", dataFilters[len(dataFilters)-1].DisplayNames[0].Value)
-	sort.Sort(byDisplayName(dataFilters))
+	if len(dataFilters) > 0 {
+		sort.Sort(byDisplayName(dataFilters))
+		fmt.Printf("first:%s\n", dataFilters[0].DisplayNames[0].Value)
+		fmt.Printf("last:%s\n", dataFilters[len(dataFilters)-1].DisplayNames[0].Value)
+	}
 	sort.Sort(byDisplayName(data.EntityDescriptors))
-	fmt.Printf("first:%s\n", dataFilters[0].DisplayNames[0].Value)
-	fmt.Printf("last:%s\n", dataFilters[len(dataFilters)-1].DisplayNames[0].Value)
 	if r.URL.Query().Get("term") != "" {
 		fmt.Printf("Search Term: %s\n", r.URL.Query().Get("term"))
 		result, err := json.Marshal(dataFilters)
