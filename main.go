@@ -20,8 +20,8 @@ func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", Index)
 	router.HandleFunc("/Reset", ResetCache)
-	log.Fatal(http.ListenAndServe("0.0.0.0:8080", router))
-	// log.Fatal(http.ListenAndServe("127.0.0.1:8080", router))
+	// log.Fatal(http.ListenAndServe("0.0.0.0:8080", router))
+	log.Fatal(http.ListenAndServe("127.0.0.1:8080", router))
 }
 
 //Index is DiscoFeed with scopes
@@ -39,13 +39,24 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 	var dataFilters []EntityDescriptor
 	var found bool
+	var terms []string
+	if r.URL.Query().Get("term") != "" {
+		terms = strings.Split(r.URL.Query().Get("term"), "@")
+	}
+	var term string
+	if len(terms) == 1 {
+		term = terms[0]
+	}
+	if len(terms) == 2 {
+		term = terms[1]
+	}
 	for i, entitydesc := range data.EntityDescriptors {
 		data.EntityDescriptors[i].ID = entitydesc.EntityID
 		dataFilter := new(EntityDescriptor)
 		*dataFilter = entitydesc
 		dataFilter.ID = dataFilter.EntityID
 		for _, scope := range entitydesc.Scopes {
-			if strings.Contains(scope.Value, r.URL.Query().Get("term")) {
+			if strings.Contains(scope.Value, term) {
 				found = true
 			} else {
 				found = false
