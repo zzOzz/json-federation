@@ -28,7 +28,7 @@ func main() {
 func Index(w http.ResponseWriter, r *http.Request) {
 
 	if xmlData == nil {
-		xmlData = []byte(loadXML("https://federation.renater.fr/renater/idps-renater-metadata.xml"))
+		xmlData = []byte(loadXML("https://metadata.federation.renater.fr/renater/main/main-idps-renater-metadata.xml"))
 	}
 	data := &EntitiesDoc{}
 	err := xml.Unmarshal(xmlData, data)
